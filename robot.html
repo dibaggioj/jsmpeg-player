@@ -40,7 +40,10 @@
         ctx.fillText('Loading...', canvas.width / 2 - 30, canvas.height / 3);
 
         // Setup the WebSocket connection and start the player
-        var wsClient = new WebSocket('ws://192.168.1.108:8084/');
+        //var wsClient = new WebSocket('ws://192.168.1.108:8084/');
+        var wsClient = new WebSocket('ws://ec2-54-68-14-193.us-west-2.compute.amazonaws.com:8084/');
+        //var wsClient = new WebSocket('ws://thegigabots.app.bigbang.io:80/');
+        console.dir(wsClient);
         var player = new jsmpeg(wsClient, {canvas: canvas});
 
         //Create an instance of the BigBangClient
