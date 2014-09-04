@@ -1,262 +1,49 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<title>Raspberry Live Video</title>
-<meta name="Content-Type" content="text/html; charset=UTF-8">
-
-<style type="text/css">
-    #videoCanvas {
-        /* Always stretch the canvas to 640x480, regardless of its
-        internal size. */
-        width: 640px;
-        height: 480px;
-    }
-</style>
-
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="js/nexusUI.js"></script>
-<script>
-    nx.onload = function () {
-        //Send to javascript, not remote server thing!
-        nx.sendsTo('js');
-    }
-
-</script>
-<script type="text/javascript" src="js/pnglib.js"></script>
-<script type="text/javascript" src="js/jsmpg.js"></script>
-<script type="text/javascript" src="js/identicon.js"></script>
-<script type="text/javascript" src="bigbang.js"></script>
-
-<link rel="stylesheet" type="text/css" href="css/style.css"/>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-
+    <meta name="viewport" content="width=320, initial-scale=1"/>
+    <title>Raspberry Pi Camera Stream</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style type="text/css">
+        body {
+            background: #333;
+            text-align: center;
+            margin-top: 5%;
+        }
+        #videoCanvas {
+            /* Always stretch the canvas to 640x480, regardless of its
+            internal size. */
+            width: 640px;
+            height: 480px;
+        }
+    </style>
+</head>
+<body>
+    <!-- The Canvas size specified here is the "initial" internal resolution. jsmpeg will
+        change this internal resolution to whatever the source provides. The size the
+        canvas is displayed on the website is dictated by the CSS style.
+    -->
+    <canvas id="videoCanvas" width="640" height="480">
+        <p>
+            Please use a browser that supports the Canvas Element, like
+            <a href="http://www.google.com/chrome">Chrome</a>,
+            <a href="http://www.mozilla.com/firefox/">Firefox</a>,
+            <a href="http://www.apple.com/safari/">Safari</a> or Internet Explorer 10
+        </p>
+    </canvas>
+    <script type="text/javascript" src="js/jsmpg.js"></script>
+    <script type="text/javascript">
         // Show loading notice
         var canvas = document.getElementById('videoCanvas');
         var ctx = canvas.getContext('2d');
         ctx.fillStyle = '#444';
-        ctx.fillText('Loading...', canvas.width / 2 - 30, canvas.height / 3);
+        ctx.fillText('Loading...', canvas.width/2-30, canvas.height/3);
 
         // Setup the WebSocket connection and start the player
-        //var wsClient = new WebSocket('ws://192.168.1.108:8084/');
-        var wsClient = new WebSocket('ws://ec2-54-68-14-193.us-west-2.compute.amazonaws.com:8084/');
-        //var wsClient = new WebSocket('ws://thegigabots.app.bigbang.io:80/');
-        // console.dir(wsClient);
+        // var client = new WebSocket('ws://192.168.1.108:8084'); // on pi's local network
+        var wsClient = new WebSocket('ws://ec2-54-68-97-136.us-west-2.compute.amazonaws.com:8084/');
         var player = new jsmpeg(wsClient, {canvas: canvas});
 
-        //Create an instance of the BigBangClient
-        // var client = new bigbang.client.BrowserBigBangClient();
-
-
-        // client.connectAnonymous('thegigabots.app.bigbang.io:80', function (result) {
-        //     if (result.success) {
-        //         client.subscribe("roboArm", function (err, c) {
-        //             if (!err) {
-        //                 beginChat(c);
-        //             }
-        //             else {
-        //                 alert("Subscribe failure. " + err);
-        //             }
-        //         })
-        //     }
-        //     else {
-        //         alert("Failed to connect.");
-        //     }
-        // });
-
-
-        // function beginChat(channel) {
-
-
-        //     ledToggle.response = function (data) {
-        //         if (data === 1) {
-        //             channel.publish({cmd: 'ledOn'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'ledOff'});
-        //         }
-        //     }
-
-        //     gripsOpen.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'gripsOpen'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     gripsClose.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'gripsClose'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     baseCW.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'baseCW'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     baseCCW.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'baseCCW'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     wristUp.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'wristUp'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     wristDown.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'wristDown'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     elbowUp.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'elbowUp'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     elbowDown.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'elbowDown'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     shoulderUp.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'shoulderUp'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     shoulderDown.response = function (data) {
-        //         if (data.press == 1) {
-        //             channel.publish({cmd: 'shoulderDown'});
-        //         }
-        //         else {
-        //             channel.publish({cmd: 'stop'});
-        //         }
-        //     };
-
-        //     channel.onMessage(function (msg) {
-
-        //         var json = msg.payload.getBytesAsJSON();
-        //         if (json.msg) {
-        //             writeMessage(msg.senderId, msg.payload.getBytesAsJSON().msg);
-        //         }
-        //     });
-
-        //     channel.onSubscribers(function (joined) {
-        //         writeMessage(joined, "Joined the channel.");
-        //     }, function (left) {
-        //         writeMessage(left, "Left the channel.");
-        //     });
-
-        //     $('#sendie').keyup(function (e) {
-        //         if (e.keyCode == 13) {
-        //             var text = $(this).val();
-        //             channel.publish({msg: text});
-        //             $(this).val("");
-        //         }
-        //     });
-        // }
-
-        // function writeMessage(clientId, text) {
-        //     var data = new Identicon(clientId, 32).toString();
-        //     var img = '<img style="float:left;" width=32 height=32 src="data:image/png;base64,' + data + '">';
-        //     $('#chat-area').append($("<p>" + img + text + "<br style='clear: both;' />  </p>"));
-        //     document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight;
-        // }
-    });
-</script>
-<body>
-<canvas id="videoCanvas" width="640" height="480">
-    <p>
-        Please use a browser that supports the Canvas Element, like
-        <a href="http://www.google.com/chrome">Chrome</a>,
-        <a href="http://www.mozilla.com/firefox/">Firefox</a>,
-        <a href="http://www.apple.com/safari/">Safari</a> or Internet Explorer 10
-    </p>
-</canvas>
-
-<!-- <table align="right">
-    <tr><td><h2>Led</h2></td>
-        <td><canvas id="ledToggle" nx="toggle"></canvas></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td><h2>Grips</h2></td>
-        <td><h2>open</h2><canvas id="gripsOpen" width="50px" nx="button">Open</canvas></td>
-        <td><h2>close</h2><canvas id="gripsClose" width="50px" nx="button">Open</canvas></td>
-    </tr>
-    <tr>
-        <td>    <h2>Wrist</h2></td>
-        <td><h2>up</h2> <canvas id="wristUp" width="50px" nx="button">Open</canvas></td>
-        <td> <h2>down</h2><canvas id="wristDown" width="50px" nx="button">Open</canvas></td>
-    </tr>
-    <tr>
-        <td>  <h2>Elbow</h2></td>
-        <td><h2>up</h2>  <canvas id="elbowUp" width="50px" nx="button">Open</canvas></td>
-        <td> <h2>down</h2><canvas id="elbowDown" width="50px" nx="button">Open</canvas></td>
-    </tr>
-    <tr>
-        <td>    <h2>Shoulder</h2></td>
-        <td> <canvas id="shoulderUp" width="50px" nx="button">Open</canvas></td>
-        <td><canvas id="shoulderDown" width="50px" nx="button">Open</canvas></td>
-    </tr>
-    <tr>
-        <td> <h2>Base</h2></td>
-        <td> <h2>cw</h2><canvas id="baseCW" width="50px" nx="button">Open</canvas></td>
-        <td> <h2>ccw</h2><canvas id="baseCCW" width="50px" nx="button">Open</canvas></td>
-    </tr>
-</table> -->
-
-<!-- <div id="page-wrap">
-    <h2>Robot Stuff.</h2>
-
-    <p id="name-area"></p>
-
-    <div id="chat-wrap">
-        <div id="chat-area"></div>
-    </div>
-
-    <form id="send-message-area">
-        <p>Your message: </p>
-        <textarea id="sendie" maxlength='100'></textarea>
-    </form>
-</div> -->
-
-
+    </script>
 </body>
 </html>
